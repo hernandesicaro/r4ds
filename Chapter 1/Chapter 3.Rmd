@@ -1,0 +1,65 @@
+---
+title: "Chapter 3"
+author: "Icaro Franco Hernandes"
+date: "2022/09/23"
+output:
+  pdf_document: default
+  html_document: default
+---
+```{r echo=TRUE}
+library(ggplot2)
+ggplot2::ggplot(data=ggplot2::mpg)+
+  geom_point(aes(x=displ, y=hwy))
+```
+
+Placing the $aes$ inside the ggplot we do not need to restate the variables in the geometry parts. All the aesthetic changes will be made considering the declared dataset. If instead you place the $aes$ in the geometry segment, you'll have to change accordly to what type of graph you want.
+
+# Exercises 3.2.4
+# Exercise 1  
+## Run $ggplot(data=mpg)$. What do you see?
+```{r 1}
+ggplot2::ggplot(data=mpg)
+```
+We see nothing. Adding just the $ggplot$ creates a canvas to which we could add layers upon with further codes, like $geom\_point$.
+---
+
+# Exercise 2
+## How many rows are in $mpg$? How many columns?
+```{r 2, echo=TRUE}
+nrow(mpg)
+ncol(mpg)
+```
+
+***
+
+# Exercise 3  
+## What does the $drv$ variable describe? Read the help for $?mpg$ to find out. 
+```{r 3}
+?mpg
+
+```
+Adding the question mark before any command takes us to the Help tab. According to the documentation of $mpg$ the $drv$ variable gives us what type of drive train the car uses, wether is front, rear ow four-wheel drive.
+
+***
+
+# Exercise 4 
+## Make a scatterplot of $hwy$ vs $cyl$.
+```{r 4, echo=TRUE}
+ggplot2::ggplot(data=mpg, aes(x=hwy, y=cyl))+
+  geom_point()
+```
+
+***
+
+# Exercise 5 
+## What happens if you make a scatterplot of $class$ vs $drv$? Why is the plot not useful?
+```{r 5}
+ggplot2::ggplot(data=mpg,aes(x=class, y=drv))+
+  geom_point()
+
+```
+This scatter plot is not useful since it does not indicate any pattern. No inference can be made with this graph.
+
+
+
+
