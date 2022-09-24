@@ -60,6 +60,81 @@ ggplot2::ggplot(data=mpg,aes(x=class, y=drv))+
 ```
 This scatter plot is not useful since it does not indicate any pattern. No inference can be made with this graph.
 
+---
+
+```{r}
+ggplot2::ggplot(data=mpg)+
+  geom_point(aes(x=displ,y=hwy, color=class))
+
+```
+It is not a good practice to map an unordered variable to a ordered aesthetic (like in the example $size=class$). $alpha=variable$ is for transparency of the points and $shape=variable$ is for each variable an observation has a different shape in the graph.
+
+```{r}
+ggplot2::ggplot(data=mpg)+
+  geom_point(aes(x=displ,y=hwy), color="blue")
+```
+This way, all the points will be blue. Since the command is outside the $aes()$ ``the color does not convey information about a variable".
 
 
+# Exercises 3.3.1
+# Exercise 1 
+## What's gone wrong with this code? Why are the points not blue?
+```{r}
+ggplot(data = mpg) + 
+  geom_point(aes(x = displ, y = hwy, color = "blue"))
+```
+The points are not blue since the color command is inside the $aes()$
+function. That would be corret if we wanted to segment the data by some variable. If we just want to paint all the points blue we'd just have to put the command outside $aes()$ 
 
+
+# Exercise 2
+## Which variables in $mpg$ are categorical? Which variables are continuous? (Hint: type $?mpg$ to read the documentaion for the dataset). How can you see this information when you run $mpg$?
+
+```{r}
+head(mpg)
+
+```
+
+The only continuous variables are $cty$ and $hwy$. These variables regard the fuel consumption in the city and on the highway.
+
+# Exercise 3
+## Map a continuous variable to $color$, $size$, and $shape$. How do these aesthetics behave differently for categorical vs. continuous variables?
+
+```{r}
+ggplot2::ggplot(data=mpg)+
+  geom_point(aes(x=displ, y=hwy, color=cty))
+
+ggplot2::ggplot(data=mpg)+
+  geom_point(aes(x=displ, y=hwy, size=cty))
+
+```
+The last graph proposed cannot be plotted since ``a continuous variable cannot be mapped to shape". The way they behave differently in the way that a continuous variable will give a gradient for colors and sizes while a discrete variable will have a different color for each class.
+
+# Exercise 4 
+## What happens if you map the same variable to multiple aesthetics?
+
+```{r}
+ggplot2::ggplot(data=mpg)+
+  geom_point(aes(x=displ, y=hwy, color=cty, size=cty))
+```
+They get combined (is this the answer they were expecting?)
+
+# Exercise 5 
+## What does the $stroke$ aesthetic do? What shapes does it work with? (Hint: use $?geom\_point$)
+```{r}
+ggplot2::ggplot(data=mpg)+
+  geom_point(aes(x=displ, y=hwy, stroke=9))
+```
+The stroke changes the width of the border for each observation.
+
+# Exercise 6
+## What happens if you map an aesthetic to something other than a variable name, like $aes(color=displ<5)$? Note, you'll also need to specify x and y.
+
+```{r}
+ggplot2::ggplot(data=mpg)+
+  geom_point(aes(x=displ,y=hwy, color=displ<5))
+
+ggplot2::ggplot(data=mpg)+
+  geom_point(aes(x=displ,y=hwy, color=cty<16))
+```
+This way we will ``create" two classes to be colored. Those cars with less than 5 cylinders will have a color, and the cars with more than 5 cylinders will have another.
