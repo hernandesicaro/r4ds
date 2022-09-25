@@ -468,3 +468,4 @@ ggplot2::ggplot() +
 ```
 
 If we do not set `group=1` the statistical transformation does not divide the data into classes. What we have, then, is that each class has 100\% of each type, so the proportion is always 1 in every bar.
+
