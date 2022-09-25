@@ -1,0 +1,18 @@
+---
+title: "Untitled"
+author: "Icaro Franco Hernandes"
+date: "2022-09-25"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+
+
+**Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.**
+
+**In our Proportion bar chart, we need to set `group = 1`. Why? In other wors what is the problem with these two graphs?**

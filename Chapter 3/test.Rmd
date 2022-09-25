@@ -1,0 +1,24 @@
+---
+title: "tabletest"
+author: "Icaro Franco Hernandes"
+date: "2022-09-25"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r load-packages, include=FALSE}
+library(dplyr)
+library(magrittr)
+library(knitr)
+```
+
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+Geometry & Statistical Transformation\\
+\hline
+geom\_bar  & count\\
+\hline
+\end{tabular}
+\end{center}
