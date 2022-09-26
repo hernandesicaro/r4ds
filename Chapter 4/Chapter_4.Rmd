@@ -1,0 +1,78 @@
+---
+title: "Chapter 4"
+author: "Icaro Franco Hernandes"
+date: "2022-09-26"
+output:
+  pdf_document: default
+  html_document: default
+subtitle: 'Workflow: Basics'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(include = FALSE)
+library(tidyverse)
+library(knitr)
+library(magrittr)
+```
+
+
+
+```{r}
+this_is_a_long_name<-2.5
+seq(1,10)
+
+```
+
+In the console, typing the first letter of a variable and then "ctrl+ $\uparrow$" gives you a list of all variables starting with those first letters. The `+` sign means that R is expecting more inputs 
+
+```{r}
+
+```
+
+
+## Exercises 4.4
+
+### 1
+Why does this code not work?
+```{r eval=FALSE, include=TRUE}
+my_variable <- 10
+my_varıable
+#> Error in eval(expr, envir, enclos): object 'my_varıable' not found
+
+```
+This code does not work since the in the second line we are actually referring to a non-defined object. This happens due to a slight difference in the name of the variables: they have different "i's".
+
+### 2
+Teak each of the following R commands to that they run correctly:
+
+```{r eval=FALSE, include=TRUE}
+library(tidyverse)
+
+ggplot(dota=mpg)+
+  geom_point(mapping=aes(x=displ, y=hwy))
+
+fliter(mpg, cyl=8)
+filter(diamond, carat>3)
+```
+
+Tweaking:
+
+```{r, include=TRUE, eval=TRUE}
+library(tidyverse)
+
+mpg%>%
+ggplot2::ggplot()+
+  geom_point(aes(x=displ, y=hwy))
+
+
+
+filter(mpg, cyl==8)
+filter(ggplot2::diamonds, carat>3)
+```
+
+
+### 3
+Press "Alt+Shift+K". What happens? How can you get to the same place using the menus?
+
+The combination shows us a table with all the shortcuts from RStudio. The same shortcuts can be accessed in the Help tab.
+
