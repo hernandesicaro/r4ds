@@ -227,3 +227,122 @@ nycflights13::flights%>%
   dplyr::arrange(distance)
 ```
 
+# Selecting Columns
+
+Selecting by the specific name of each column:
+```{r}
+nycflights13::flights%>%
+  dplyr::select(
+    year,
+    month,
+    day)
+```
+
+Selecting an interval of columns:
+```{r}
+nycflights13::flights%>%
+  dplyr::select(
+    month:arr_time
+  )
+```
+
+Negative selection:
+```{r}
+nycflights13::flights%>%
+  dplyr::select(
+    -(month:arr_time))
+```
+The helpers are from `tidyselect`:
+
+* `tidyselect::starts_with("")`
+
+* `tidyselect::ends_with("")`
+
+* `tidyselect::contains("")`
+
+* `tidyselect::matches("")`
+
+* `tidyselect::num_range("")`
+
+We can select a few columns and also the rest of them:
+```{r}
+
+nycflights13::flights%>%
+  dplyr::select(
+    minute,
+    distance,
+    dplyr::everything())
+
+```
+
+
+
+
+
+
+## Exercises 5.4.1
+
+### 1
+Brainstorm as many ways as possible to select `dep_time`, `dep_delay`, `arr_time`, and `arr_delay` from `flights`.
+
+
+
+### 2
+What happens if you include the name of a variable multiple times in a `select()` call?
+```{r}
+nycflights13::flights%>%
+  dplyr::select(
+    year,
+    minute,
+    year) #crime ocorre e nada acontece nesse caso
+
+nycflights13::flights%>%
+  dplyr::select(
+    year,
+    -(year)) #empty vector
+
+nycflights13::flights%>%
+  dplyr::select(
+    (year:day),
+    year)
+```
+
+If we include the same column more than one time, the selection takes into account just the first operation. Unless it is a contradictory selection, which is this case we probably get an empty vector.
+
+
+### 3
+What does the `any_of()` function do? Why might if be helpful in conjunction with this vector?
+
+Lets read the documentation:
+```{r}
+?any_of()
+
+vars<-c("year","month","day","dep_delay","arr_delay")
+
+nycflights13::flights%>%
+  dplyr::select(
+    any_of(vars))
+
+nycflights13::flights%>%
+  dplyr::select(
+    -any_of(vars))
+```
+The `any_of()` command takes a vector of variables and selects columns according to the variables inside the vector. The documentation states that it is useful for negative selections and also that it does not check for errors. It is not clear yet to me what are the advantages.
+
+
+
+### 4
+Does the result of running the following code surprise you? How do the select helpers deal with case by default? How can you change that default?
+
+```{r}
+nycflights13::flights%>%
+  dplyr::select(contains("TIME"))
+
+select(flights, 
+       tidyselect::contains("TIME", ignore.case=FALSE))
+
+select(flights, 
+       tidyselect::contains("time", ignore.case=FALSE)) #this one should return the same results as the first.
+
+```
+The result does surprise. At a first glance we would thought that this selection would return empty vectors, however the default setting of `contains()` ignore the differences between upper and lower case. If we want to make a more precise selection (and make a distinction of upper and lower case) we can add `ignore.case=FALSE`. 
