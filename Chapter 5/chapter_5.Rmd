@@ -155,4 +155,75 @@ mean(v1)
 mean(v1, na.rm = T)
 
 ```
-The command `na.rm=TRUE` discards the `NA` values from the calculation!.
+The command `na.rm=TRUE` discards the `NA` values from the calculation!
+
+# Arranging
+
+
+
+## Exercises 5.3.1
+
+### 1
+How could you use `arrange()` to sort all missing values to the start? (Hint: use `is.na()`)
+
+```{r}
+v<-tibble::tibble(
+  x=(c(3,7,1,NA))
+)
+
+x=c(3,7,1,NA)
+
+sort(x, decreasing = FALSE, na.last=FALSE)
+
+```
+I used the base R command for sorting.
+
+### 2
+Sort `flights` to find the most delayed flights. Find the flights that left earliest.
+
+For the most delayed flights we just need to arrange in descending format:
+```{r}
+nycflights13::flights%>%
+  dplyr::arrange(desc(dep_delay))
+```
+
+And for the earliest departures we just need to arrange them:
+
+```{r}
+nycflights13::flights%>%
+  dplyr::arrange(dep_delay)
+
+```
+
+
+### 3
+Sort `flights` to find the fastest (highest speed) flights
+
+```{r}
+nycflights13::flights%>%
+  dplyr::select(air_time,
+                dplyr::everything())%>%
+  dplyr::arrange(air_time)
+```
+
+
+### 4
+Which flights traveled the farthest? Which traveled the shortest?
+
+The ones travelled the fartherst:
+```{r}
+nycflights13::flights%>%
+  dplyr::select(distance,
+                dplyr::everything())%>%
+  dplyr::arrange(desc(distance))
+```
+
+The ones that traveled the shortest:
+
+```{r}
+nycflights13::flights%>%
+  dplyr::select(distance,
+                dplyr::everything())%>%
+  dplyr::arrange(distance)
+```
+
