@@ -469,3 +469,170 @@ ggplot2::ggplot() +
 
 If we do not set `group=1` the statistical transformation does not divide the data into classes. What we have, then, is that each class has 100\% of each type, so the proportion is always 1 in every bar.
 
+# Position Adjustments
+
+
+
+## Exercises 3.8.1
+
+Changing the color for the bar plot:
+
+```{r}
+diamonds%>%
+  ggplot2::ggplot(aes(x=cut))+
+  geom_bar(aes(fill=cut))
+```
+Combining cut and clarity:
+
+```{r}
+diamonds%>%
+  ggplot2::ggplot(aes(x=cut))+
+  geom_bar(aes(fill=clarity))
+```
+
+To make an easier comparison **across** groups, we can set the `position` command inside the geometry:
+
+```{r}
+diamonds%>%
+  ggplot2::ggplot(aes(x=cut))+
+  geom_bar(aes(fill=clarity), position="fill")
+```
+
+Another way to show data across groups is adding ``dodge":
+
+```{r}
+diamonds%>%
+  ggplot2::ggplot(aes(x=cut)) +
+  geom_bar(aes(fill=clarity), position="dodge")
+```
+This creates individual distributions for each category of diamond cuts and their clarities!
+
+The scatter plot from the point geometry avoids **overplotting**, so not all the points appear on certain graphs. For that we must add the `jitter` adjustment. Lets compare both scatter plots:
+
+```{r}
+mpg%>%
+  ggplot2::ggplot(aes(x=displ, y=hwy))+
+  geom_point()
+
+mpg%>%
+  ggplot2::ggplot(aes(x=displ, y=hwy))+
+  geom_point(position="jitter")
+
+```
+
+There is a specific geometry for this:
+
+```{r}
+mpg%>%
+  ggplot2::ggplot(aes(x=displ, y=hwy))+
+  geom_jitter()
+```
+It plots the same information, but we do not need to specify the jitter inside the point geometry.
+
+### 1
+**What is the problem with this plot?**
+
+```{r}
+mpg%>%
+  ggplot2::ggplot(aes(x=cty, y=hwy))+
+  geom_point()
+```
+```{r}
+mpg%>%
+  ggplot2::ggplot(aes(x=cty,y=hwy))+
+  geom_jitter()+
+  geom_smooth()
+```
+Without adding `jitter`the scatter plot shows various linear relations between the city and highway mileage. When we plot all the points we can see that such ``rule" is not true. "Jittering" shows us a less predictable interaction between the two variables (if we plot different reression curves for different drivetrains we can actually see a interesting pattern in the fuel consumption).
+
+### 2
+**What parameters to `geom_jitter()` control the amount of jittering?**
+
+Lets read the documentation!
+```{r}
+?geom_jitter()
+```
+
+Two parameters control the amount of jitter: the width and height. They control respectively horizontal and vertical jitter.
+
+### 3 
+Compare and contrast `geom_jitter()` with `geom_count()`.
+
+Lets plot two graphs:
+```{r}
+mpg%>%
+  ggplot2::ggplot(aes(x=cty, y=hwy))+
+  geom_jitter()
+
+mpg%>%
+  ggplot2::ggplot(aes(x=cty, y=hwy))+
+  geom_count()
+```
+`geom_jitter` plots points even though there could be some overplotting case. `geom_count` is useful for counting how many points are overlapping. According to the documentation it ``counts number of observations at each location" and it is most useful if we have overplotting!.
+
+### 4
+What is the default position adjustment for `geom_boxplot()`? Create a visualization of the `mpg` dataset that demonstrates it.
+
+According to the documentation the position adjustment is `dodge2`. Lets plot a graph with the boxplot geometry:
+
+```{r}
+mpg%>%
+  ggplot2::ggplot(aes(y=displ))+
+  geom_boxplot(aes(group=drv))
+
+diamonds%>%
+  ggplot2::ggplot(aes(x=cut,y=depth))+
+  geom_boxplot()
+
+mpg%>%
+  ggplot2::ggplot(aes(x=drv,y=displ))+
+  geom_boxplot(aes(group=drv))
+```
+This question is not clear for me! pls send help
+
+# Coordinate systems 
+
+To plot horizontal box plots, it is useful to use `coord_flip`. For maps, for example, `coord_quickmap()` adjust the ratio of the plot. Finally, `coord_polar()` uses polar coordinates
+
+## Exercises 3.9.1
+
+### 1
+Turn a stacked bar chart into a pie chart using `cood_polar()`
+
+
+```{r}
+diamonds%>%
+  ggplot2::ggplot(aes(x=clarity))+
+  geom_bar(aes(fill=cut), position="dodge")->plot1
+
+plot1+coord_flip()
+plot1+coord_polar()
+  
+```
+I know that this example is a little cluttered but I was just playing with the different combinations possible (the second graph does seem helpful at all).
+
+
+
+### 2
+what does `labs()` do? Read the documentation.
+With `labs()` we can add or modify different labels for our graphs, such as modifying axes and legends.
+
+### 3
+What's the difference between `coord_quickmap()` and `coord_map()`?
+Both commands project maps into a 2d surface (remember that the earth is kind of a sphere). The difference is that the quickmap preserve straight lines, hence, works better for areas near the equator. While the `coord_map` can be used for places far from the equator, it uses more computational power.
+
+
+### 4
+What does the plot below tell you about the relationship between city and highway mpg? Why is `coord_fixed()` important? What does `geom_abline()` do?
+
+```{r}
+mpg%>%
+  ggplot2::ggplot(aes(x=cty, y=hwy))+
+  geom_jitter()+
+  geom_abline()+
+  coord_fixed()
+
+#in the book they do not use the jitter geometry, but i liked it so much i decided to put as the example :)
+```
+The command `geom_abline()` plots a linear regression line according to the data. According to the documentation, `cood_fixed` forces the axis of the plot to have a fixed scale, in the default case, on unit on the x-axis is the same lenght as one unit on the y-axis.
+
