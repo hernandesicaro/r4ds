@@ -1,0 +1,158 @@
+---
+title: "Chapter 5"
+author: "Icaro Franco Hernandes"
+date: "2022-09-26"
+output:
+  pdf_document: default
+  html_document: default
+subtitle: Data Transformation
+---
+
+```{r setup, eva= TRUE, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(knitr)
+library(magrittr)
+library(nycflights13)
+```
+
+
+
+Remember that to view a whole data set we can execute, for example, `view(nycflights13::flights)`. This is a tibble, and tibble $\neq$ table. Tibbles work better for the tidyverse. To check what kind of variable we are working with, we can use the following command:
+ 
+```{r}
+typeof(nycflights13::flights$time_hour)
+```
+ 
+# Filtering
+
+Selecting all flights from January first:
+```{r}
+nycflights13::flights%>%
+  dplyr::filter(month==1,day==1)->jan1
+#remeber that dplyr does not change the original dataset (always try to be as pure as possible).
+```
+
+If we want to also print the new data set, just put between parenthesis:
+```{r}
+(nycflights13::flights%>%
+  dplyr::filter(month==1,day==1)->jan1)
+```
+
+Boolean operators are: `&` for **and**, `|` for **or** and `!` for **is not**.
+
+Inclusion operator: `%in%`. For example:
+
+```{r}
+nycflights13::flights%>%
+  dplyr::filter(month %in% c(11,12))
+```
+This will filter all flights that happened in november **or** december. The filter already excludes `NA` values.
+
+## Exercises 5.2.4
+
+### 1
+Find all flights that
+
+* Had an arrival delay of two or more hours
+
+```{r}
+nycflights13::flights%>%
+  dplyr::filter(arr_delay>=120)->f1
+```
+
+
+* Flew to Houston (`IAH` or `HOU`)
+```{r}
+nycflights13::flights%>%
+  dplyr::filter(dest %in% c("IAH", "HOU"))->f2
+```
+
+* Were operated by United, American, or Delta
+
+```{r}
+nycflights13::flights%>%
+  dplyr::filter(carrier %in% c("UA", "AA", "DL"))->f3
+```
+
+* Departed in Summer (July, August, and September)
+
+```{r}
+nycflights13::flights%>%
+  dplyr::filter(month %in% c(7, 8, 9))->fsummer
+```
+
+* Arrived more than two hours late, but did not leave late
+
+```{r}
+nycflights13::flights%>%
+  dplyr::filter(arr_delay>120,dep_time<=sched_dep_time)->f5
+```
+
+* Were delayed by at least an hour, but made up over 30 minutes in flight
+
+```{r}
+nycflights13::flights%>%
+  dplyr::filter(arr_delay>=60,air_time>30)->f6
+```
+
+* Departed between midnight and 6am (inclusive)
+
+```{r}
+nycflights13::flights%>%
+  dplyr::filter(hour %in% c(seq(0,6)))->f7
+
+or
+
+nycflights13::flights%>%
+  dplyr::filter(hour >= 0 & hour<= 6)->f71
+
+# nycflights13::flights%>%
+#   dplyr::filter(0 <= hour <= 6) -> this does not work!
+```
+
+### 2
+Another useful `dplyr` filter helper is `between()`. What does it do? Can you use it to simplify the code needed to answer the precious questions?
+
+According to the documentation, `between()` let us pick any values between to boundaries, and it is a shortcut for `x>= & x<=`. They would be useful in the cases where we had to filter for the summer months and the flights between midnight and 6 a.m.:
+
+```{r}
+nycflights13::flights%>%
+  dplyr::filter(between(month, 7, 9))->f8
+
+nycflights13::flights%>%
+  dplyr::filter(between(hour, 0, 6))->f9
+```
+
+
+### 3
+How many flights have a missing `dep_time`? What other variables are missing? What might these rows represent?
+
+```{r}
+nycflights13::flights%>%
+  dplyr::filter(is.na(dep_time))%>%
+  dplyr::summarise(n = dplyr::n())->na
+
+na
+
+```
+Using the count operator from `dplyr` we can see that 8255 flights have missing values for the departure time. This means that theses flights were canceled. If we do not have the departure time, we also cannot check the  airtime, the departure delay and the arrival delay. **Remember this count operator (within the summarise function) from dplyr**.
+
+###  4
+Why is `NA^0`not missing? Why is `NA|TRUE` not missing? Whys is `FALSE & NA` not missing? Can you figure out the general rule? (`NA*0` is a tricky counterexample!)
+
+```{r}
+NA^0
+NA|TRUE
+FALSE&NA
+```
+
+Since we are working with boolean operators here, the general rule is that R avoids the NA values and does let them contaminate the operation. It is different from the case if we calculate the average of some values with an NA (in that case it does contaminate the average).
+
+```{r}
+v1<-c(1,1, NA)
+mean(v1)
+mean(v1, na.rm = T)
+
+```
+The command `na.rm=TRUE` discards the `NA` values from the calculation!.
