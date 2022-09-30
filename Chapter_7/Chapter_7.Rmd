@@ -1,0 +1,20 @@
+---
+title: "Chapter 7"
+subtitle: "Exploratory Data Analysis"
+author: "Icaro Franco Hernandes"
+date: "2022-09-30"
+output: html_document
+---
+
+```{r setup, eva= TRUE, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(knitr)
+library(magrittr)
+```
+
+# Variation
+
+# Missing Values
+
+
